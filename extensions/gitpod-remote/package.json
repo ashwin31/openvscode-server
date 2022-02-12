@@ -213,7 +213,7 @@
     "vscode:prepublish": "yarn run compile --cwd .."
   },
   "devDependencies": {
-    "@types/node": "^10.12.21"
+    "@types/node": "16.x"
   },
   "dependencies": {
     "gitpod-shared": "0.0.1",

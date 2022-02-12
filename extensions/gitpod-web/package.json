@@ -492,7 +492,7 @@
     "vscode:prepublish": "yarn run compile --cwd .."
   },
   "devDependencies": {
-    "@types/node": "^10.12.21",
+    "@types/node": "16.x",
     "@types/node-fetch": "^2.5.12",
     "@types/uuid": "8.0.0",
     "@types/yauzl": "^2.9.1",

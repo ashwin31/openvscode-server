@@ -38,7 +38,7 @@
 		"vscode:prepublish": "npm run compile"
 	},
 	"devDependencies": {
-		"@types/node": "^10.12.21",
+		"@types/node": "16.x",
 		"@types/node-fetch": "^2.5.12",
 		"@types/tmp": "^0.2.1"
 	},
