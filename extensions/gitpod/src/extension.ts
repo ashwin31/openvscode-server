@@ -18,28 +18,28 @@ import * as vscode from 'vscode';
 import { grpc } from '@improbable-eng/grpc-web';
 
 interface SSHConnectionParams {
-	workspaceId: string
-	instanceId: string
-	gitpodHost: string
+	workspaceId: string;
+	instanceId: string;
+	gitpodHost: string;
 }
 
 interface LocalAppConfig {
-	gitpodHost: string
-	configFile: string
-	apiPort: number
-	pid: number
-	logPath: string
+	gitpodHost: string;
+	configFile: string;
+	apiPort: number;
+	pid: number;
+	logPath: string;
 }
 
 interface Lock {
-	pid?: number
-	value: string
-	deadline: number
+	pid?: number;
+	value: string;
+	deadline: number;
 }
 
 interface LocalAppInstallation {
-	path: string
-	etag: string | null
+	path: string;
+	etag: string | null;
 }
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -220,7 +220,6 @@ export async function activate(context: vscode.ExtensionContext) {
 				cancelLogStreamListener.dispose();
 			});
 
-			let spawnTimer: NodeJS.Timeout | undefined;
 			const localAppProcess = cp.spawn(installation.path, {
 				detached: true,
 				stdio: ['ignore', logStream, logStream],
@@ -240,20 +239,9 @@ export async function activate(context: vscode.ExtensionContext) {
 			const pid = await new Promise<number>((resolve, reject) => {
 				localAppProcess.on('error', reject);
 				localAppProcess.on('exit', code => reject(new Error('unexpectedly exit with code: ' + code)));
-				if (localAppProcess.pid) {
-					// TODO(ak) when Node.js > 14.17
-					// localAppProcess.on('spwan', () => resolve(localAppProcess.pid)));
-					spawnTimer = setInterval(() => {
-						if (checkRunning(localAppProcess.pid) === true) {
-							resolve(localAppProcess.pid);
-						}
-					}, 150);
-				}
+				localAppProcess.on('spawn', () => resolve(localAppProcess.pid!));
 			}).finally(() => {
 				cancelLocalAppProcessListener.dispose();
-				if (spawnTimer) {
-					clearInterval(spawnTimer);
-				}
 			});
 
 			log(`the local app has been stared: ${JSON.stringify({ pid, log: vscode.Uri.file(logPath).toString() }, undefined, 2)}`);
