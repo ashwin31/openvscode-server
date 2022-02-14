@@ -334,6 +334,7 @@ export async function startExtensionHostProcess(): Promise<void> {
 	const renderer = await connectToRenderer(protocol);
 	performance.mark(`code/extHost/didWaitForInitData`);
 	const { initData } = renderer;
+	console.log(`Initial extensions > ${initData.extensions.map(e => e.identifier.value).join(' ')}`);
 	// setup things
 	patchProcess(!!initData.environment.extensionTestsLocationURI); // to support other test frameworks like Jasmin that use process.exit (https://github.com/microsoft/vscode/issues/37708)
 	initData.environment.useHostProxy = args.useHostProxy !== undefined ? args.useHostProxy !== 'false' : undefined;
