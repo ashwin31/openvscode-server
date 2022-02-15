@@ -49,6 +49,9 @@ function getExtraDevSystemExtensionsRoot(): string {
 	return _ExtraDevSystemExtensionsRoot;
 }
 
+const sleep = async (sec: number) =>
+	new Promise((resolve) => setTimeout(resolve, sec * 1000));
+
 export class RemoteAgentEnvironmentChannel implements IServerChannel {
 
 	private static _namePool = 1;
@@ -98,7 +101,12 @@ export class RemoteAgentEnvironmentChannel implements IServerChannel {
 
 		this.whenExtensionsReady.then(() => getInitialExtensionsToInstall(logService, requestService).then(extToInstall => {
 			const idsOrVSIX = extToInstall.map(input => /\.vsix$/i.test(input) ? URI.file(input) : input);
-			return idsOrVSIX.length ? extensionManagementCLIService.installExtensions(idsOrVSIX, [],  { isMachineScoped: true }, false) : undefined;
+			logService.info('custom extension install sleep start >>>>>>>>>>>>>');
+			logService.info('custom extension install sleep will install extensions: ', JSON.stringify(idsOrVSIX));
+			return sleep(30).then(() => {
+				logService.info('custom extension install sleep done >>>>>>>>>>>>>');
+				return idsOrVSIX.length ? extensionManagementCLIService.installExtensions(idsOrVSIX, [], { isMachineScoped: true }, false) : undefined;
+			});
 		})).then(null, error => {
 			logService.error(error);
 		});
